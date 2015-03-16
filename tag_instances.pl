@@ -27,7 +27,6 @@ foreach my $region(@AMAZON_REGIONS){
 		#for each instance, set the tag for 'user=key'
 		foreach my $instance(@instances){
 			chomp($instance);
-			print "working on $instance\n";
 			print "ec2-create-tags $instance --region $region --tag user=$key\n";
 			system("ec2-create-tags $instance --region $region --tag user=$key");
 			$fat_hash{$region}{'instance_count'} += 1;
@@ -37,4 +36,4 @@ foreach my $region(@AMAZON_REGIONS){
 	}
 }
 
-print dumper(%fat_hash);
+print Dumper(%fat_hash);
