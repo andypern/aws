@@ -1,0 +1,1 @@
+/launch-se-cluster.sh --cluster JamesCluster --mapr-version 3.0.2 --config-file ./3node.lst --region us-west-1 --key-file ~/.ssh/jsun-cal.pem  --image ami-72ce4642 --image-su ec2-user --instance-type m1.large
