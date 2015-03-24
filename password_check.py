@@ -1,6 +1,7 @@
 import pexpect
 
-host = 'cardinal1'
+#host = 'cardinal1'
+host = '54.220.67.140'
 account_name = 'root'
 ssh_new_key = "Are you sure you want to continue connecting"
 ssh_opts = 'PubkeyAuthentication=no -i ConnectTimeout=4'
