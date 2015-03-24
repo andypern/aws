@@ -36,4 +36,4 @@ foreach my $region(@AMAZON_REGIONS){
 	}
 }
 
-print Dumper(%fat_hash);
+#print Dumper(%fat_hash);
