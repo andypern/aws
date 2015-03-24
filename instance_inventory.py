@@ -4,12 +4,13 @@ from boto import ec2
 from boto.ec2 import EC2Connection 
 import boto.ec2
 import re
+import pexpect
 
 
-api_key = 'XXXXXXX'
-api_secret = 'XXXXXXX'
+api_key = 'XXXX'
+api_secret = 'XXXX'
 
-
+#TODO: save json data somewhere.
 
 class Ec2Handler(object):
     def __init__(self, apikey, apisecret, region):
@@ -47,6 +48,7 @@ class Ec2Handler(object):
 	
     def create_instance_tags(self, instance, tagkey, tagval):
     	tagset = self.connection.create_tags([instance], {tagkey: tagval})
+    	print "Instance: %s :  %s tag to %s" % (instance, tagkey, tagval)
   
 
 def get_region_list():
@@ -65,12 +67,20 @@ def check_tags(instance):
 			regconn.create_instance_tags(instance, "user", key_name)	
 	except KeyError:
 	#if we don't find a tag, we make one..and match the key_name
-		#print "no tag for %s" % (instance.key_name)
 		print instance.id
-		regconn.create_instance_tags(instance.id, "user", instance.key_name)
+		if instance.key_name is None:
+			print "null key name!"
+		else: 
+			regconn.create_instance_tags(instance.id, "user", instance.key_name)
+
+def check_ssh(instance, ip_address):
+	#use pexpect to see if password auth is enabled
+
+
+
 
 regionlist = get_region_list()
-print regionlist
+
 
 
 
@@ -88,6 +98,12 @@ for reg in regionlist:
 			myInstDetails = regconn.get_instance_details(instance)
 			#check and fix tags
 			check_tags(instance)
+			#print instances out that have public IPs
+			if (instance.ip_address is not None) and (instance.state == "running"):
+				print "instance %s has %s and is of state: %s" % (instance, 
+					instance.ip_address, instance.state)
+
+
 			
 			#print myInstDetails
 

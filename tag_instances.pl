@@ -29,7 +29,7 @@ foreach my $region(@AMAZON_REGIONS){
 			chomp($instance);
 			print "ec2-create-tags $instance --region $region --tag user=$key\n";
 			system("ec2-create-tags $instance --region $region --tag user=$key");
-			$fat_hash{$region}{'instance_count'} += 1;
+			$fat_hash{$AMAZON_REGIONS}{'instance_count'} += 1;
 			$fat_hash{$key}{'instance_count'} += 1;
 			$fat_hash{$region}{$key}{'instance_count'} += 1;
 		}
