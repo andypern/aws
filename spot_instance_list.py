@@ -2,8 +2,8 @@ import re
 import boto
 import boto.ec2
 
-apikey = 'AKIAI2TYPF7OVN76T6XA'
-apisecret = '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'
+apikey = 'XXXX'
+apisecret = 'XXXX'
 
 def get_region_list():
     regions = boto.ec2.get_regions('ec2')
