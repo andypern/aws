@@ -17,8 +17,8 @@ import pexpect
 # * Volume tagging?
 #####
 
-api_key = 'XXXX'
-api_secret = 'XXXX'
+apikey = 'XXXX'
+apisecret = 'XXXX'
 
 
 #
@@ -40,6 +40,7 @@ phat_hash = Ddict( dict )
 phat_hash['insecure_ssh'] = []
 phat_hash['secure_ssh'] = []
 phat_hash['user_tag_updates'] = []
+phat_hash['instance_json'] = []
 
 
 class Ec2Handler(object):
@@ -50,7 +51,7 @@ class Ec2Handler(object):
             aws_access_key_id=apikey,
             aws_secret_access_key=apisecret
         )
-  
+
     def fetch_all_instances(self):
         reservations = self.connection.get_all_instances()
         instance_list = []
@@ -81,6 +82,7 @@ class Ec2Handler(object):
     	tagset = self.connection.create_tags([instance], {tagkey: tagval})
     	print "Instance: %s :  %s tag to %s" % (instance, tagkey, tagval)
   
+  	
 
 def get_region_list():
     regions = boto.ec2.get_regions('ec2')
@@ -97,7 +99,7 @@ def check_tags(instance):
 			#print "%s tag nomatch %s key" % (instance.tags['user'], instance.key_name)
 			regconn.create_instance_tags(instance, "user", key_name)
 			inst_user = instance.id + instance.key_name
-			phat_hash['user_tag_updates'].append[key_name]
+			phat_hash['user_tag_updates'].append(key_name)
 	except KeyError:
 	#if we don't find a tag, we make one..and match the key_name
 		print instance.id
@@ -106,7 +108,7 @@ def check_tags(instance):
 		else: 
 			regconn.create_instance_tags(instance.id, "user", instance.key_name)
 			inst_user = instance.id + instance.key_name
-			phat_hash['user_tag_updates'].append[instance.key_name]
+			phat_hash['user_tag_updates'].append(instance.key_name)
 
 def check_ssh(instance, ip_address):
 	inst_id = instance.id
@@ -140,29 +142,59 @@ regionlist = get_region_list()
 
 
 
+
+
 for reg in regionlist:
 	# we have to make sure to omit cn-north-1 and us-gov-west-1
 	badRe = re.compile('cn-north-1|us-gov-west-1')
 	if not badRe.match(reg):
 		phat_hash[reg]['inst_count'] = 0
 		#instantiate object and connection:
-		regconn = Ec2Handler(api_key, api_secret, reg)
+		regconn = Ec2Handler(apikey, apisecret, reg)
+		
 		#get all instances from region
 		print "fetching %s" % (reg)
 		reg_inst_list = regconn.fetch_all_instances()
+		
 		#now we have all instances, get details 
 		for instance in reg_inst_list:
 			phat_hash['raw_inst'][instance] = regconn.get_instance_details(instance)
+			phat_hash['instance_json'].append(phat_hash['raw_inst'][instance])
 			phat_hash[reg]['inst_count'] += 1
 			#check and fix tags
 			check_tags(instance)
 			#running inst w/ public IP's => check if SSH is secure
 			if (instance.ip_address is not None) and (instance.state == "running"):
-				check_ssh(instance, instance.ip_address)
+				#check_ssh(instance, instance.ip_address)
+				print "skipping ssh check for now"
+		
+		#
+		#for some odd reason, have to instantiate a separate connection to get spot instances
+		#
+		spotconn = boto.ec2.connect_to_region(
+            region_name=reg,
+            aws_access_key_id=apikey,
+            aws_secret_access_key=apisecret
+        )
+		reqs = spotconn.get_all_spot_instance_requests()
+
+		for sir in reqs:
+			print "ID: %s Inst_ID: %s Price: %s Type: %s State: %s " % (sir.id, sir.instance_id, sir.price, sir.type, sir.status)
+
+
 		#print some stats per region
 		#print "Region %s had %s tag_updates , %s insecure_ssh, and %s secure_ssh" % (reg, phat_hash[])
 
 
-print phat_hash
+
+# for inst in phat_hash['instance_json']:
+# 	print inst
+
+#print out all the insecure shit
+
+#for insecure in phat_hash['insecure_ssh']:
+#	print insecure.key_name	
+
+#print phat_hash
 
 
