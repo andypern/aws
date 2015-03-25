@@ -3,7 +3,7 @@ import boto
 import boto.ec2
 
 apikey = 'XXXX'
-apisecret = 'XXXX'
+apisecret = 'XXX'
 
 def get_region_list():
     regions = boto.ec2.get_regions('ec2')
