@@ -1,4 +1,4 @@
-from pprint import pprint
+import os
 import boto
 from boto import ec2
 from boto.ec2 import EC2Connection 
@@ -14,12 +14,12 @@ import pexpect
 # * get lifecycle type (spot/etc)
 # * build more stats (per user, per inst-type, etc)
 # * adjust ordering to collect stats before SSH
-# * Volume tagging?
+# 
+# 
 #####
 
-apikey = 'XXXX'
-apisecret = 'XXXX'
-
+apikey =  os.environ.get("APIKEY", None)
+apisecret = os.environ.get("APISECRET", None)
 
 #
 #build a dict class to get some anonymous hash going on
@@ -134,6 +134,20 @@ def check_ssh(instance, ip_address):
 		phat_hash['secure_ssh'].append(inst_id)
 
 
+def get_spots(region):
+		#
+		#for some odd reason, have to instantiate a separate connection to get spot instances
+		#
+		spotconn = boto.ec2.connect_to_region(
+            region_name=reg,
+            aws_access_key_id=apikey,
+            aws_secret_access_key=apisecret
+        )
+		reqs = spotconn.get_all_spot_instance_requests()
+
+		for sir in reqs:
+			print "ID: %s Inst_ID: %s Price: %s Type: %s State: %s " % (sir.id, sir.instance_id, 
+				sir.price, sir.type, sir.status)
 
 
 
@@ -167,20 +181,10 @@ for reg in regionlist:
 			if (instance.ip_address is not None) and (instance.state == "running"):
 				#check_ssh(instance, instance.ip_address)
 				print "skipping ssh check for now"
-		
 		#
-		#for some odd reason, have to instantiate a separate connection to get spot instances
-		#
-		spotconn = boto.ec2.connect_to_region(
-            region_name=reg,
-            aws_access_key_id=apikey,
-            aws_secret_access_key=apisecret
-        )
-		reqs = spotconn.get_all_spot_instance_requests()
-
-		for sir in reqs:
-			print "ID: %s Inst_ID: %s Price: %s Type: %s State: %s " % (sir.id, sir.instance_id, sir.price, sir.type, sir.status)
-
+		#uncomment to print out spot request info for each region
+		#		
+		#get_spots(reg)
 
 		#print some stats per region
 		#print "Region %s had %s tag_updates , %s insecure_ssh, and %s secure_ssh" % (reg, phat_hash[])
