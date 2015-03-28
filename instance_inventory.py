@@ -90,7 +90,7 @@ def get_region_list():
 
 def check_tags(instance):
 #look at instance tags, make sure there is a 'user' tag
-# and that it matches the key_name
+# and that it matches the key_name. also, if there's no Name tag, make it the key_name too.
 	try:
 		user = instance.tags['user']
 		key_name = instance.key_name
@@ -102,14 +102,19 @@ def check_tags(instance):
 			phat_hash['user_tag_updates'].append(key_name)
 	except KeyError:
 	#if we don't find a tag, we make one..and match the key_name
-		print instance.id
 		if instance.key_name is None:
 			print "null key name!"
 		else: 
 			regconn.create_instance_tags(instance.id, "user", instance.key_name)
 			inst_user = instance.id + instance.key_name
 			phat_hash['user_tag_updates'].append(instance.key_name)
-
+	try:
+		name = instance.tags['Name']
+	except KeyError:
+		if instance.key_name is None:
+			print "null key name!"
+		else:
+			regconn.create_instance_tags(instance.id, "Name", instance.key_name)
 def check_ssh(instance, ip_address):
 	inst_id = instance.id
 	#use pexpect to see if password auth is enabled
