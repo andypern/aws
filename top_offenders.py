@@ -157,7 +157,7 @@ for user in user_list:
 				table.add_rows([['Name', 'Inst_id', 'inst_type', 'launch_time', 'days'], 
 					[mydict['tags']['Name'], mydict['instance_id'], mydict['instance_type'],
 					mydict['launch_time'], mydict['runtime']]])
-				#table width: name = 25, id = 10, type = 10, ltime = 25, days = 4
+		#table width: name = 25, id = 10, type = 10, ltime = 25, days = 4
 		table.set_cols_width([25,10,10,25,4])
 		print table.draw()
 			
