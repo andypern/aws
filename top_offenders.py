@@ -7,6 +7,9 @@ import boto.ec2
 import re
 from texttable import Texttable
 
+import requests
+import json
+
 #
 #purpose of this script is to find AWS instances which meet the following criteria:
 #
@@ -113,14 +116,62 @@ for reg in regionlist:
 						user_list.append(user)
 					#for first time users, instantiate an instance hour count
 						user_hash[user]['totaltime'] = 0
-					#and make an instance_list for each user
+					# also a per-user cost
+						user_hash[user]['totalcost'] = 0
+
+					#also, set their 'offender flag' to false
+						user_hash[user]['offender'] = False
+
 				
 				#regardless of if user is in the list before, now we
 				#need to start shoving stuff into the user_hash
 				#create a hash element for this user
 					inst_id = myInst['instance_id']
 					user_hash[user][inst_id] = myInst
+
+				
+				###########
+				#Pricing stuff
+				# new: grab pricing info, if we don't already have it for this reg+inst
+				# note: for now, we are assuming os=linux
+				#	
+				#to start with, check to see if we already have this inst-type
+				# price for this region
+
+				
+					instType = user_hash[user][inst_id]['instance_type']
 					
+
+					try:
+						# if we have done this already for this inst-type and region, skip
+						# maybe in the future we'd increment the reg/inst-type count.
+						#
+						regInst = user_hash[reg][instType]
+					except:
+						#this means we havent done this one yet...
+
+
+						#first we need to build our request string.
+						priceRequestString = 'http://info.awsstream.com/instances.json?region=' + \
+						str(reg) + '&model=' + str(instType) + \
+						'&pricing=od&os=linux' \
+
+						#perform the request, and get json object, note that we only want the first record
+						
+						#print priceRequestString
+
+						priceResponse = requests.get(priceRequestString).json()[0]
+						#print priceResponse
+
+						#for now , we just care about the hourly price
+						user_hash[reg][instType] = priceResponse['hourly']
+
+						#print "found %s" % (user_hash[reg][instType])
+
+				###########################
+				#End pricing stuff
+				#
+
 				#do date manipulation, but only on running instances
 					datestring = user_hash[user][inst_id]['launch_time']
 					datestring = datestring[:-1]
@@ -128,11 +179,32 @@ for reg in regionlist:
 					lt_delta = datetime.datetime.utcnow() - lt_datetime
 				#stick lt_delta.days into user_hash for instance, also add to user_total and region_total
 					
-					user_hash[user][inst_id]['runtime'] = lt_delta.days
-					user_hash[user]['totaltime'] += lt_delta.days
-					user_hash[reg]['totaltime'] += lt_delta.days
 
-					
+					#store total_seconds, we can do math after that
+					user_hash[user][inst_id]['seconds'] = lt_delta.total_seconds()
+					#store days too, cuz its easy
+					user_hash[user][inst_id]['days'] = lt_delta.days
+					user_hash[user]['totaltime'] += lt_delta.total_seconds()
+					user_hash[reg]['totaltime'] += lt_delta.total_seconds()
+
+					########
+					#cost section
+					#
+					#
+					#now lets figure out how much this instance has cost since launch time
+
+					user_hash[user][inst_id]['cost'] = round(user_hash[reg][instType] * (
+						lt_delta.total_seconds() / 3600), 2)
+
+					#and add it to the user's total cost
+
+					user_hash[user]['totalcost'] += user_hash[user][inst_id]['cost']
+
+
+					#flag the user if any of their instances is > 7days.
+					if user_hash[user][inst_id]['days'] > 6:
+						user_hash[user]['offender'] = True
+
 				except Exception, err:
 					print Exception, err
 					print "no user tag on %s" % (myInst['instance_id'])
@@ -146,22 +218,24 @@ for reg in regionlist:
 
 for user in user_list:
 
-#but we only care if the user's total time is > 7 days
-	if user_hash[user]['totaltime'] > 6:
+#we'll only print out flagged users
+	if user_hash[user]['offender']  is True:
 		print "Stats for %s" % (user)
 		table = Texttable()
 	#need to iterate through each instance..
 		for k in  user_hash[user].keys():
-			if not k == 'totaltime':
+			if not k == 'totaltime' and not k == 'totalcost' and not k == 'offender':
 				mydict = user_hash[user][k]
-				table.add_rows([['Name', 'Inst_id', 'inst_type', 'launch_time', 'days'], 
+				totaldays = user_hash[user]['totaltime'] / 86400
+				table.add_rows([['Name', 'Inst_id', 'inst_type', 'launch_time', 'days', 'cost'], 
 					[mydict['tags']['Name'], mydict['instance_id'], mydict['instance_type'],
-					mydict['launch_time'], mydict['runtime']]])
-		#table width: name = 25, id = 10, type = 10, ltime = 25, days = 4
-		table.set_cols_width([25,10,10,25,4])
+					mydict['launch_time'], mydict['days'], mydict['cost']]])
+		#table width: name = 25, id = 10, type = 10, ltime = 25, days = 4, cost = 8
+		table.set_cols_width([25,10,10,25,4, 8])
 		print table.draw()
-			
-		print "total for %s: %s" % (user, user_hash[user]['totaltime'])
+
+		print "total for %s: %s days, %s dollars" % (user, totaldays,
+			user_hash[user]['totalcost'])
 
 
 
