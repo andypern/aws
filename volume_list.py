@@ -68,32 +68,6 @@ def get_region_list():
     return [r.name for r in regions]
 
 
-
-def attachedvolumes(volumes, region):
-#
-# this approach may be heavy handed.  Effectively its running get_all_instances (
-# with a filter for the attached volID) for each attached volume. Takes approx 3mins total
-# A better way may be to
-# get all instances, then iterate through them and identify attached volumes to limit API calls.
-#
-    print 'Attached Volume ID - Instance ID','-','Device Name'
-    volcount = 0
-    for volumes in vol:
-        #print dir(volumes)
-        if volumes.attachment_state() == 'attached':
-            myfilter = {'block-device-mapping.volume-id':volumes.id}
-            volumesinstance = regconn.get_all_instances(myfilter)
-            ids = [z for k in volumesinstance for z in k.instances]
-            for s in ids:
-                volcount += 1
-                 #print volumes.id,'-',s.id,'-',volumes.attach_data.device
-    print "There were %s vols in %s" % (volcount, region)
-
-
-
-
-
-
 def unattachedvolumes(vol):
     print "%s was unattached .." % (vol)
 
