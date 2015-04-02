@@ -227,6 +227,9 @@ for user in user_list:
 			if not k == 'totaltime' and not k == 'totalcost' and not k == 'offender':
 				mydict = user_hash[user][k]
 				totaldays = user_hash[user]['totaltime'] / 86400
+				#note; right now we're printing out all instances
+				#for each user that is an 'offender', but perhaps we should
+				# only print out instances which meet the offending threshold.
 				table.add_rows([['Name', 'Inst_id', 'inst_type', 'launch_time', 'days', 'cost'], 
 					[mydict['tags']['Name'], mydict['instance_id'], mydict['instance_type'],
 					mydict['launch_time'], mydict['days'], mydict['cost']]])
