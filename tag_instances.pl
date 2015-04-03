@@ -1,5 +1,9 @@
 #!/usr/bin/perl -w
 
+#
+#Deprecated: this uses the ec2-cli , which is slow...and painful. 
+#
+
 use strict;
 use Data::Dumper;
 #region list

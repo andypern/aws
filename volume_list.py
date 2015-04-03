@@ -172,6 +172,10 @@ for region in regionlist:
                     #
                     #print dir(vol)
                     check_dot(inst.instances[0], vol)
+                #
+                #now we can add all 'naughty' volumes to a list and print.
+                #
+                print vol.tags['dot'] 
 
 
 

@@ -151,7 +151,7 @@ def get_spots(region):
 		reqs = spotconn.get_all_spot_instance_requests()
 
 		for sir in reqs:
-			print "ID: %s Inst_ID: %s Price: %s Type: %s State: %s " % (sir.id, sir.instance_id, 
+			print "ID: %s Inoost_ID: %s Price: %s Type: %s State: %s " % (sir.id, sir.instance_id, 
 				sir.price, sir.type, sir.status)
 
 
@@ -185,7 +185,8 @@ for reg in regionlist:
 			#running inst w/ public IP's => check if SSH is secure
 			if (instance.ip_address is not None) and (instance.state == "running"):
 				#check_ssh(instance, instance.ip_address)
-				print "skipping ssh check for now"
+				#print "skipping ssh check for now"
+				ssh_check = false
 		#
 		#uncomment to print out spot request info for each region
 		#		

@@ -1,6 +1,9 @@
 import re
 import boto
 import boto.ec2
+#
+#use this to find all the spot-instance requests across the account
+#
 
 apikey = 'XXXX'
 apisecret = 'XXX'

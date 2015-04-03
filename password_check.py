@@ -1,5 +1,8 @@
 import pexpect
 
+#
+#quick test to see if ssh allows password auth
+#
 #host = 'cardinal1'
 host = '54.220.67.140'
 account_name = 'root'
