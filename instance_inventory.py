@@ -186,7 +186,7 @@ for reg in regionlist:
 			if (instance.ip_address is not None) and (instance.state == "running"):
 				#check_ssh(instance, instance.ip_address)
 				#print "skipping ssh check for now"
-				ssh_check = false
+				ssh_check = ""
 		#
 		#uncomment to print out spot request info for each region
 		#		
