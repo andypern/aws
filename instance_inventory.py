@@ -11,6 +11,7 @@ import pexpect
 #
 #TODO
 # * fix hash so its readable by json parsers
+# * put in JSON output flag to feed vince's tools
 # * get lifecycle type (spot/etc)
 # * build more stats (per user, per inst-type, etc)
 # * adjust ordering to collect stats before SSH

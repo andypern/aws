@@ -175,7 +175,8 @@ for region in regionlist:
                 #
                 #now we can add all 'naughty' volumes to a list and print.
                 #
-                print vol.tags['dot'] 
+                
+                #print vol.tags['dot'] 
 
 
 
