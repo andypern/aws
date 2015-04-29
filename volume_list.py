@@ -69,7 +69,7 @@ def get_region_list():
 
 
 def unattachedvolumes(vol):
-    print "%s was unattached .." % (vol)
+    print "%s was unattached .., owned by %s" % (vol, vol.tags['user'])
 
 
 
@@ -175,7 +175,7 @@ for region in regionlist:
                 #
                 #now we can add all 'naughty' volumes to a list and print.
                 #
-                
+
                 #print vol.tags['dot'] 
 
 
