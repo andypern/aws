@@ -70,9 +70,9 @@ def get_region_list():
 
 def unattachedvolumes(vol):
     try:
-        print "%s was unattached : owned by %s create_date: %s " % (vol, vol.tags['user'], vol.create_date)
+        print "%s was unattached : owned by %s create_time: %s " % (vol, vol.tags['user'], vol.create_time)
     except KeyError:
-        print "%s was unattached, no owner create_date: %s" % (vol, vol.create_date)
+        print "%s was unattached, no owner create_time: %s" % (vol, vol.create_time)
 
 
 
