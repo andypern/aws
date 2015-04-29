@@ -70,7 +70,7 @@ def get_region_list():
 
 def unattachedvolumes(vol):
     try:
-        print "%s was unattached : owned by %s state: %s" % (vol, vol.tags['user'], vol.state)
+        print "%s was unattached : owned by %s update: %s" % (vol, vol.tags['user'], vol.update)
     except KeyError:
         print "%s was unattached, no owner" % (vol)
 
