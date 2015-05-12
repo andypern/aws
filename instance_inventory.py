@@ -198,8 +198,8 @@ for reg in regionlist:
 
 
 
-# for inst in phat_hash['instance_json']:
-# 	print inst
+for inst in phat_hash['instance_json']:
+ 	print inst
 
 #print out all the insecure shit
 
