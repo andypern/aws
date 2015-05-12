@@ -178,7 +178,7 @@ for reg in regionlist:
 		
 		#now we have all instances, get details 
 		for instance in reg_inst_list:
-			print instance
+			print type(instance)
 			phat_hash['raw_inst'][instance] = regconn.get_instance_details(instance)
 			phat_hash['instance_json'].append(phat_hash['raw_inst'][instance])
 			phat_hash[reg]['inst_count'] += 1
