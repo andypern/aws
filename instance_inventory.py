@@ -178,7 +178,6 @@ for reg in regionlist:
 		
 		#now we have all instances, get details 
 		for instance in reg_inst_list:
-			print dir(instance)
 			phat_hash['raw_inst'][instance] = regconn.get_instance_details(instance)
 			phat_hash['instance_json'].append(phat_hash['raw_inst'][instance])
 			phat_hash[reg]['inst_count'] += 1
@@ -186,9 +185,9 @@ for reg in regionlist:
 			check_tags(instance)
 			#running inst w/ public IP's => check if SSH is secure
 			if (instance.ip_address is not None) and (instance.state == "running"):
-				#check_ssh(instance, instance.ip_address)
+				check_ssh(instance, instance.ip_address)
 				#print "skipping ssh check for now"
-				ssh_check = ""
+				#ssh_check = ""
 		#
 		#uncomment to print out spot request info for each region
 		#		
