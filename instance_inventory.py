@@ -31,9 +31,9 @@ except getopt.GetoptError as err:
 
 for opt, arg in opts:
 	if opt in ('-s', '--ssh'):
-		sshcheck = True
+		sshcheck = 1
 	else:
-		sshcheck = False
+		sshcheck = 0
 
 
 
@@ -204,7 +204,7 @@ for reg in regionlist:
 			#check and fix tags
 			check_tags(instance)
 			#running inst w/ public IP's => check if SSH is secure
-			if (instance.ip_address is not None) and (instance.state == "running") and (sshcheck == True):
+			if (instance.ip_address is not None) and (instance.state == "running") and (sshcheck == 1):
 				check_ssh(instance, instance.ip_address)
 				#print "skipping ssh check for now"
 				#ssh_check = ""
