@@ -1,4 +1,5 @@
 import os
+import getopt
 import boto
 from boto import ec2
 from boto.ec2 import EC2Connection 
@@ -18,6 +19,22 @@ import pexpect
 # 
 # 
 #####
+
+try:
+        opts, args = getopt.getopt(sys.argv[1:], "s", ["ssh"])
+    except getopt.GetoptError as err:
+        # print help information and exit:
+        print(err) # will print something like "option -a not recognized"
+        print "wrong option"
+        sys.exit(2)
+
+for opt, arg in opts:
+	if opt in ('-s', '--ssh'):
+		sshcheck = True
+	else:
+		sshcheck = False
+
+
 
 apikey =  os.environ.get("APIKEY", None)
 apisecret = os.environ.get("APISECRET", None)
@@ -118,6 +135,7 @@ def check_tags(instance):
 			regconn.create_instance_tags(instance.id, "Name", instance.key_name)
 def check_ssh(instance, ip_address):
 	inst_id = instance.id
+	print "checking SSH on %s,  %s" % (instance, ip_address)
 	#use pexpect to see if password auth is enabled
 	ssh_new_key = "Are you sure you want to continue connecting"
 	ssh_opts = 'PubkeyAuthentication=no -i ConnectTimeout=2'
@@ -135,6 +153,7 @@ def check_ssh(instance, ip_address):
 		if i == 1:
 			#print "%s -> %s expected password" % (instance, ip_address)
 			phat_hash['insecure_ssh'].append(inst_id)
+			print "inst %s is insecure" % (inst_id)
 
 	except Exception, exp:
 		phat_hash['secure_ssh'].append(inst_id)
@@ -184,10 +203,12 @@ for reg in regionlist:
 			#check and fix tags
 			check_tags(instance)
 			#running inst w/ public IP's => check if SSH is secure
-			if (instance.ip_address is not None) and (instance.state == "running"):
+			if (instance.ip_address is not None) and (instance.state == "running") and (sshcheck == True):
 				check_ssh(instance, instance.ip_address)
 				#print "skipping ssh check for now"
 				#ssh_check = ""
+			else:
+				ssh_check = ""
 		#
 		#uncomment to print out spot request info for each region
 		#		
