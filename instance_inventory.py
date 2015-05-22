@@ -1,4 +1,5 @@
 import os
+import sys
 import getopt
 import boto
 from boto import ec2
