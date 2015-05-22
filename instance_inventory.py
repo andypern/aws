@@ -21,6 +21,7 @@ import pexpect
 # 
 #####
 
+sshcheck = 0
 try:
         opts, args = getopt.getopt(sys.argv[1:], "s", ["ssh"])
 except getopt.GetoptError as err:
