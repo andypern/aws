@@ -155,7 +155,7 @@ def check_ssh(instance, ip_address):
 		if i == 1:
 			#print "%s -> %s expected password" % (instance, ip_address)
 			phat_hash['insecure_ssh'].append(inst_id)
-			print "inst %s is insecure" % (inst_id)
+			print "inst %s is insecure, spun up by %s" % (inst_id, instance.key_name)
 
 	except Exception, exp:
 		phat_hash['secure_ssh'].append(inst_id)
