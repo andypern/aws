@@ -117,7 +117,7 @@ def check_dot(instance,vol):
 
 regionlist = get_region_list()
 
-
+    
 for region in regionlist:
     # we have to make sure to omit cn-north-1 and us-gov-west-1
     badRe = re.compile('cn-north-1|us-gov-west-1')

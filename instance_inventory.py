@@ -22,8 +22,9 @@ import pexpect
 #####
 
 sshcheck = 0
+listall = 0
 try:
-        opts, args = getopt.getopt(sys.argv[1:], "s", ["ssh"])
+        opts, args = getopt.getopt(sys.argv[1:], "sl", ["ssh","list"])
 except getopt.GetoptError as err:
         # print help information and exit:
         print(err) # will print something like "option -a not recognized"
@@ -35,6 +36,10 @@ for opt, arg in opts:
 		sshcheck = 1
 	else:
 		sshcheck = 0
+	if opt in ('-l', '--list'):
+		listall = 1
+	else:
+		listall = 0
 
 
 
@@ -223,8 +228,9 @@ for reg in regionlist:
 
 
 
-#for inst in phat_hash['instance_json']:
- 	#print inst
+if listall == 1:
+ 	for inst in phat_hash['instance_json']:
+ 		print inst
 
 #print out all the insecure shit
 
