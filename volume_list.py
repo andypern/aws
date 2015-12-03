@@ -6,6 +6,7 @@ import getopt
 import boto.ec2
 import datetime
 
+
 apikey =  os.environ.get("APIKEY", None)
 apisecret = os.environ.get("APISECRET", None)
 
@@ -207,7 +208,7 @@ for region in regionlist:
                 try:
                     lastAttached = vol.tags['lastAttached']
                     print lastAttached
-                    print type(lastAttached)
+                    print datetime.datetime.utcfromtimestamp(lastAttached)
                     #if it does exist, compare with nowtime
                     tDelta = nowtime - lastAttached
                     if datetime.timedelta.total_seconds(tDelta) > 86400:
