@@ -206,6 +206,8 @@ for region in regionlist:
 				#
                 try:
                     lastAttached = vol.tags['lastAttached']
+                    print lastAttached
+                    print type(lastAttached)
                     #if it does exist, compare with nowtime
                     tDelta = nowtime - lastAttached
                     if datetime.timedelta.total_seconds(tDelta) > 86400:
