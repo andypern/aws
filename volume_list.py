@@ -1,6 +1,7 @@
 import os
 import re
 import boto
+import getopt
 import boto.ec2
 import datetime
 
