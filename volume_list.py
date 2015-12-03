@@ -2,6 +2,7 @@ import os
 import re
 import boto
 import boto.ec2
+import datetime
 
 apikey =  os.environ.get("APIKEY", None)
 apisecret = os.environ.get("APISECRET", None)
@@ -114,7 +115,8 @@ def check_dot(instance,vol):
 
 ##end functions
 
-
+#get the current time, we'll use it later
+nowtime = datetime.datetime.utcnow()
 regionlist = get_region_list()
 
     
@@ -176,6 +178,11 @@ for region in regionlist:
                     #
                     #print dir(vol)
                     check_dot(inst.instances[0], vol)
+				#
+				#Now, set a the 'lastAttached' tag on the volume to equal the current time, but only if 
+                # we haven't updated the time on this volume in more than 6 hours (to speed the script up some)
+				#
+                vol.add_tag('lastAttached', nowtime)
                 #
                 #now we can add all 'naughty' volumes to a list and print.
                 #
