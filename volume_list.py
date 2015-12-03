@@ -12,6 +12,27 @@ apisecret = os.environ.get("APISECRET", None)
 #TODO
 # * find unattached volumes, find date, delete if >30d && unatt'd (and log it)
 # * find volumes that don't have the 'delete on termination flag set'
+# * put more things into functions
+
+
+#get opts
+
+notify = 0
+
+try:
+        opts, args = getopt.getopt(sys.argv[1:], "n", ["notify"])
+except getopt.GetoptError as err:
+        # print help information and exit:
+        print(err) # will print something like "option -a not recognized"
+        print "wrong option"
+        sys.exit(2)
+
+for opt, arg in opts:
+    if opt in ('-n', '--notify'):
+        notify = 1
+    else:
+        notify = 0
+
 
 class Ec2Handler(object):
     def __init__(self, apikey, apisecret, region):
@@ -111,8 +132,6 @@ def check_dot(instance,vol):
 
 
 
-
-
 ##end functions
 
 #get the current time, we'll use it later
@@ -180,9 +199,25 @@ for region in regionlist:
                     check_dot(inst.instances[0], vol)
 				#
 				#Now, set a the 'lastAttached' tag on the volume to equal the current time, but only if 
-                # we haven't updated the time on this volume in more than 6 hours (to speed the script up some)
+                # we haven't updated the time on this volume in more than 24 hours (to speed the script up some, 
+                #as well as eliminate errors using too many api calls)
 				#
-                vol.add_tag('lastAttached', nowtime)
+                try:
+                    lastAttached = vol.tags['lastAttached']
+                    #if it does exist, compare with nowtime
+                    tDelta = nowtime - lastAttached
+                    if datetime.timedelta.total_seconds(tDelta) > 86400:
+                        vol.add_tag('lastAttached', nowtime)
+                    else:
+                        print "%s has a delta of %s , not more than 86400 , skipping" %(vol, tDelta)
+
+
+                except KeyError:
+                    #if it doesn't have the tag set, set it
+                    vol.add_tag('lastAttached', nowtime)
+                    print '%s had empty attached tag, set to %s' %(vol, nowtime) 
+                
+
                 #
                 #now we can add all 'naughty' volumes to a list and print.
                 #
