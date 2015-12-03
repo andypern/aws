@@ -209,7 +209,7 @@ for region in regionlist:
                 try:
                     lastAttached = vol.tags['lastAttached']
                     print lastAttached
-                    parsedAttached parser.parse(lastAttached)
+                    parsedAttached = parser.parse(lastAttached)
                     #if it does exist, compare with nowtime
                     tDelta = nowtime - parsedAttached
                     if datetime.timedelta.total_seconds(tDelta) > 86400:
