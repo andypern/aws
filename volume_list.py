@@ -5,6 +5,7 @@ import boto
 import getopt
 import boto.ec2
 import datetime
+from dateutil import parser
 
 
 apikey =  os.environ.get("APIKEY", None)
@@ -208,7 +209,7 @@ for region in regionlist:
                 try:
                     lastAttached = vol.tags['lastAttached']
                     print lastAttached
-                    print datetime.datetime.strptime(lastAttached)
+                    print parser.parse(lastAttached)
                     #if it does exist, compare with nowtime
                     tDelta = nowtime - lastAttached
                     if datetime.timedelta.total_seconds(tDelta) > 86400:
