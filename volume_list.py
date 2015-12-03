@@ -208,14 +208,12 @@ for region in regionlist:
 				#
                 try:
                     lastAttached = vol.tags['lastAttached']
-                    print lastAttached
                     parsedAttached = parser.parse(lastAttached)
                     #if it does exist, compare with nowtime
                     tDelta = nowtime - parsedAttached
                     if datetime.timedelta.total_seconds(tDelta) > 86400:
                         vol.add_tag('lastAttached', nowtime)
-                    else:
-                        print "%s has a delta of %s , not more than 86400 , skipping" %(vol, tDelta)
+
 
 
                 except KeyError:
