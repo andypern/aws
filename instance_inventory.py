@@ -104,6 +104,7 @@ class Ec2Handler(object):
         return details
 	
     def create_instance_tags(self, instance, tagkey, tagval):
+    	print "something went wrong with %s" %(instance.id)
     	tagset = self.connection.create_tags([instance], {tagkey: tagval})
     	print "Instance: %s :  %s tag to %s" % (instance, tagkey, tagval)
   
