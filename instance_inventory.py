@@ -212,7 +212,7 @@ for reg in regionlist:
 			phat_hash['raw_inst'][instance] = regconn.get_instance_details(instance)
 			phat_hash['instance_json'].append(phat_hash['raw_inst'][instance])
 			phat_hash[reg]['inst_count'] += 1
-			#check and fix tags
+			#check and fix tags, but only on instances that aren't terminated..those we don't care about
 			if not instance.state == "terminated":
 			 check_tags(instance)
 			#running inst w/ public IP's => check if SSH is secure

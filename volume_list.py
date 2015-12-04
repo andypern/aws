@@ -15,8 +15,8 @@ apisecret = os.environ.get("APISECRET", None)
 #####
 #TODO
 # * find unattached volumes, find date, delete if >30d && unatt'd (and log it)
-# * find volumes that don't have the 'delete on termination flag set'
 # * put more things into functions
+# * start associating cost with the unattached (so we know if its even worth notifying..)
 
 
 #get opts
