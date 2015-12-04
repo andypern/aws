@@ -104,7 +104,8 @@ class Ec2Handler(object):
         return details
 	
     def create_instance_tags(self, instance, tagkey, tagval):
-    	print "something went wrong with %s" %(instance.id)
+    	# it would seem that if an instance is in 'terminated' state..this can screw up
+    	#print "something went wrong with %s" %(instance.id)
     	tagset = self.connection.create_tags([instance], {tagkey: tagval})
     	print "Instance: %s :  %s tag to %s" % (instance, tagkey, tagval)
   
@@ -212,7 +213,8 @@ for reg in regionlist:
 			phat_hash['instance_json'].append(phat_hash['raw_inst'][instance])
 			phat_hash[reg]['inst_count'] += 1
 			#check and fix tags
-			check_tags(instance)
+			if instance.state is not "terminated":
+			 check_tags(instance)
 			#running inst w/ public IP's => check if SSH is secure
 			if (instance.ip_address is not None) and (instance.state == "running") and (sshcheck == 1):
 				check_ssh(instance, instance.ip_address)
