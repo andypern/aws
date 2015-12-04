@@ -139,6 +139,7 @@ def check_tags(instance):
 		if instance.key_name is None:
 			print "null key name!"
 		else:
+			print "this shouldn't happen, but is for %s" %(instance.id)
 			print "instance %s , spun by %s , had no Name tag??" % (instance.id, inst_user)
 			#comment out next line to avoid renaming any instances...
 			#regconn.create_instance_tags(instance.id, "Name", instance.key_name)
