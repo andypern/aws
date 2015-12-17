@@ -156,7 +156,7 @@ def check_ssh(instance, ip_address):
 	try:
 		p = pexpect.spawn(cmd_connect)
 
-		i = p.expect([ssh_new_key, 'asswor'])
+		i = p.expect([ssh_new_key, 'assword:'])
 
 		if i == 0:
 			p.send('yes\r')
