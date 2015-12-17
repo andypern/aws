@@ -230,8 +230,19 @@ for user in user_list:
 				#note; right now we're printing out all instances
 				#for each user that is an 'offender', but perhaps we should
 				# only print out instances which meet the offending threshold.
+				
+				#
+				#little hack since some instances don't have names
+				#
+				try:
+					nametag = mydict['tags']['Name']
+
+				except KeyError:
+					print "%s had no name tag, setting to something lame" % (mydict['instance_id'])
+					nametag = "noname"
+
 				table.add_rows([['Name', 'Inst_id', 'inst_type', 'launch_time', 'days', 'cost'], 
-					[mydict['tags']['Name'], mydict['instance_id'], mydict['instance_type'],
+					[nametag, mydict['instance_id'], mydict['instance_type'],
 					mydict['launch_time'], mydict['days'], mydict['cost']]])
 		#table width: name = 25, id = 10, type = 10, ltime = 25, days = 4, cost = 8
 		table.set_cols_width([25,10,10,25,4, 8])
