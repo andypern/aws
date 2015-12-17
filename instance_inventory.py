@@ -160,7 +160,7 @@ def check_ssh(instance, ip_address):
 
 		if i == 0:
 			p.send('yes\r')
-			i = p.expect([ssh_newkey, 'assword:'])
+			i = p.expect([ssh_new_key, 'assword:'])
 
 		if i == 1:
 			#print "%s -> %s expected password" % (instance, ip_address)
