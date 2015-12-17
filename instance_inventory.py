@@ -16,7 +16,7 @@ import pexpect
 # * put in JSON output flag to feed vince's tools
 # * get lifecycle type (spot/etc)
 # * build more stats (per user, per inst-type, etc)
-# * adjust ordering to collect stats before SSH
+# 
 # 
 # 
 #####
@@ -140,10 +140,10 @@ def check_tags(instance):
 	except KeyError:
 		if instance.key_name is None:
 			print "null key name!"
-		else:
-			#print "this shouldn't happen, but is for %s" %(instance.id)
-			print "instance %s , spun by %s , had no Name tag??" % (instance.id, instance.key_name)
-			#comment out next line to avoid renaming any instances...
+		# else:
+		# 	#print "this shouldn't happen, but is for %s" %(instance.id)
+		# 	print "instance %s , spun by %s , had no Name tag??" % (instance.id, instance.key_name)
+		# 	#comment out next line to avoid renaming any instances...
 			#regconn.create_instance_tags(instance.id, "Name", instance.key_name)
 def check_ssh(instance, ip_address):
 	inst_id = instance.id
