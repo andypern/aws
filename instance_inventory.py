@@ -150,7 +150,7 @@ def check_ssh(instance, ip_address):
 	#print "checking SSH on %s,  %s" % (instance, ip_address)
 	#use pexpect to see if password auth is enabled
 	ssh_new_key = "Are you sure you want to continue connecting"
-	ssh_opts = 'PubkeyAuthentication=no -i ConnectTimeout=2'
+	ssh_opts = 'PubkeyAuthentication=no -o ConnectTimeout=2'
 	account_name = 'root'
 	cmd_connect = "ssh -p22 -o %s %s@%s uname" % (ssh_opts, account_name, ip_address)
 	try:
