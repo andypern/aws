@@ -147,8 +147,9 @@ def check_tags(instance):
 			#regconn.create_instance_tags(instance.id, "Name", instance.key_name)
 def check_ssh(instance, ip_address):
 	inst_id = instance.id
+	
+	print "checking SSH on %s,  %s" % (instance, ip_address)
 	inst_name = instance.tags['Name']
-	#print "checking SSH on %s,  %s" % (instance, ip_address)
 	#use pexpect to see if password auth is enabled
 	ssh_new_key = "Are you sure you want to continue connecting"
 	ssh_opts = 'PubkeyAuthentication=no -o ConnectTimeout=2'
