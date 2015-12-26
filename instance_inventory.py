@@ -137,7 +137,7 @@ def check_tags(instance):
 			phat_hash['user_tag_updates'].append(instance.key_name)
 	try:
 		name = instance.tags['Name']
-		print name
+		print "hello"
 	except KeyError:
 		if instance.key_name is None:
 			print "null key name!"
