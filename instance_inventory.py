@@ -147,6 +147,7 @@ def check_tags(instance):
 			#regconn.create_instance_tags(instance.id, "Name", instance.key_name)
 def check_ssh(instance, ip_address):
 	inst_id = instance.id
+	inst_name = instance.tags['Name']
 	#print "checking SSH on %s,  %s" % (instance, ip_address)
 	#use pexpect to see if password auth is enabled
 	ssh_new_key = "Are you sure you want to continue connecting"
@@ -165,7 +166,7 @@ def check_ssh(instance, ip_address):
 		if i == 1:
 			#print "%s -> %s expected password" % (instance, ip_address)
 			phat_hash['insecure_ssh'].append(inst_id)
-			print "inst %s on %s is insecure, spun up by %s" % (inst_id, instance.ip_address, instance.key_name)
+			print "inst id: %s , inst name: %s on %s is insecure, spun up by %s" % (inst_id, inst_name, instance.ip_address, instance.key_name)
 
 	except Exception, exp:
 		phat_hash['secure_ssh'].append(inst_id)
