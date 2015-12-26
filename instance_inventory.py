@@ -137,7 +137,8 @@ def check_tags(instance):
 			phat_hash['user_tag_updates'].append(instance.key_name)
 	try:
 		name = instance.tags['Name']
-		print "hello %s" %(name)
+		# for some reason this doesn't always get called?
+		#print "hello %s" %(name)
 	except KeyError:
 		if instance.key_name is None:
 			print "null key name!"
@@ -149,7 +150,7 @@ def check_tags(instance):
 def check_ssh(instance, ip_address):
 	inst_id = instance.id
 	
-	print "checking SSH on %s,  %s" % (instance, ip_address)
+	#print "checking SSH on %s,  %s" % (instance, ip_address)
 	inst_name = instance.tags['Name']
 	#use pexpect to see if password auth is enabled
 	ssh_new_key = "Are you sure you want to continue connecting"
