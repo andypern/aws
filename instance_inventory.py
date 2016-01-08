@@ -151,7 +151,13 @@ def check_ssh(instance, ip_address):
 	inst_id = instance.id
 	
 	#print "checking SSH on %s,  %s" % (instance, ip_address)
-	inst_name = instance.tags['Name']
+	#hm, somehow sometimes there isn't a name..
+	# need to figure out why the prevoius function doesn't fix this..
+	# for now, wrap in try/except
+	try:
+		inst_name = instance.tags['Name']
+	except KeyError:
+		inst_name = instance.key_name
 	#use pexpect to see if password auth is enabled
 	ssh_new_key = "Are you sure you want to continue connecting"
 	ssh_opts = 'PubkeyAuthentication=no -o ConnectTimeout=2'
